@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LIMIT/OFFSET Pagination Debug</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background-color: #f5f5f5;
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .info { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            border-radius: 5px; 
+            margin: 10px 0; 
+            border-left: 4px solid #007bff;
+        }
+        .sql { 
+            background: #f1f3f4; 
+            padding: 15px; 
+            border-radius: 5px; 
+            font-family: monospace;
+            border: 1px solid #dee2e6;
+        }
+        .highlight { 
+            background: #fff3cd; 
+            padding: 2px 4px; 
+            border-radius: 3px; 
+            font-weight: bold;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h3 {
+            color: #495057;
+            margin-top: 0;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-link a {
+            color: #007bff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .back-link a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LIMIT/OFFSET Pagination Debug</h1>
+        
+        <div class="info">
+            <h3>Current Pagination Values:</h3>
+            <p><strong>Current Page:</strong> <span class="highlight">{{.Paginator.CurrentPage}}</span></p>
+            <p><strong>Items Per Page:</strong> <span class="highlight">{{.Paginator.PerPage}}</span></p>
+            <p><strong>OFFSET:</strong> <span class="highlight">{{.Paginator.Offset}}</span> (starting position)</p>
+            <p><strong>LIMIT:</strong> <span class="highlight">{{.Paginator.Limit}}</span> (number of items)</p>
+            <p><strong>Total Rows:</strong> <span class="highlight">{{.Paginator.TotalRows}}</span></p>
+            <p><strong>Total Pages:</strong> <span class="highlight">{{.Paginator.TotalPages}}</span></p>
+        </div>
+        
+        <div class="info">
+            <h3>How LIMIT/OFFSET Works:</h3>
+            <ul>
+                <li><strong>OFFSET</strong> = (Current Page - 1) × Items Per Page</li>
+                <li><strong>LIMIT</strong> = Items Per Page</li>
+                <li>Page 1: OFFSET 0, LIMIT 10 → Rows 1-10</li>
+                <li>Page 2: OFFSET 10, LIMIT 10 → Rows 11-20</li>
+                <li>Page 3: OFFSET 20, LIMIT 10 → Rows 21-30</li>
+                <li>Page 4: OFFSET 30, LIMIT 10 → Rows 31-40</li>
+            </ul>
+        </div>
+        
+        <div class="sql">
+            <h3>Example SQL Query:</h3>
+            <pre>{{.SQLExample}}</pre>
+        </div>
+        
+        <div class="back-link">
+            <a href="/">← Back to Pagination Example</a>
+        </div>
+    </div>
+</body>
+</html> 

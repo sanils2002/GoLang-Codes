@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Pagination Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #495057;
+        }
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .pagination a, .pagination span {
+            padding: 8px 12px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            color: #007bff;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        .pagination a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        .pagination .current {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .pagination .disabled {
+            color: #6c757d;
+            pointer-events: none;
+        }
+        .info {
+            text-align: center;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .per-page {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .per-page label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .per-page select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            color: #495057;
+            cursor: pointer;
+        }
+        .per-page select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        .page-info {
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dynamic Pagination Example</h1>
+        
+        <div class="info">
+            Showing {{len .Users}} of {{.Paginator.TotalRows}} users
+        </div>
+        
+        <div class="controls">
+            <div class="per-page">
+                <label for="perPage">Items per page:</label>
+                <select id="perPage" onchange="changePerPage(this.value)">
+                    <option value="5" {{if eq .Paginator.PerPage 5}}selected{{end}}>5</option>
+                    <option value="10" {{if eq .Paginator.PerPage 10}}selected{{end}}>10</option>
+                    <option value="20" {{if eq .Paginator.PerPage 20}}selected{{end}}>20</option>
+                    <option value="50" {{if eq .Paginator.PerPage 50}}selected{{end}}>50</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Top Pagination -->
+        <div class="page-info">
+            Page {{.Paginator.CurrentPage}} of {{.Paginator.TotalPages}}
+        </div>
+        
+        <div class="pagination">
+            {{if .Paginator.HasPrev}}
+                <a href="?page={{.Paginator.PrevPage}}&per_page={{.Paginator.PerPage}}">&laquo; Previous</a>
+            {{else}}
+                <span class="disabled">&laquo; Previous</span>
+            {{end}}
+            
+            {{range .Paginator.Links}}
+                {{if eq . $.Paginator.CurrentPage}}
+                    <span class="current">{{.}}</span>
+                {{else}}
+                    <a href="?page={{.}}&per_page={{$.Paginator.PerPage}}">{{.}}</a>
+                {{end}}
+            {{end}}
+            
+            {{if .Paginator.HasNext}}
+                <a href="?page={{.Paginator.NextPage}}&per_page={{.Paginator.PerPage}}">Next &raquo;</a>
+            {{else}}
+                <span class="disabled">Next &raquo;</span>
+            {{end}}
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Users}}
+                <tr>
+                    <td>{{.ID}}</td>
+                    <td>{{.Name}}</td>
+                    <td>{{.Email}}</td>
+                    <td>{{.Role}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+        
+        <!-- Bottom Pagination -->
+        <div class="pagination">
+            {{if .Paginator.HasPrev}}
+                <a href="?page={{.Paginator.PrevPage}}&per_page={{.Paginator.PerPage}}">&laquo; Previous</a>
+            {{else}}
+                <span class="disabled">&laquo; Previous</span>
+            {{end}}
+            
+            {{range .Paginator.Links}}
+                {{if eq . $.Paginator.CurrentPage}}
+                    <span class="current">{{.}}</span>
+                {{else}}
+                    <a href="?page={{.}}&per_page={{$.Paginator.PerPage}}">{{.}}</a>
+                {{end}}
+            {{end}}
+            
+            {{if .Paginator.HasNext}}
+                <a href="?page={{.Paginator.NextPage}}&per_page={{.Paginator.PerPage}}">Next &raquo;</a>
+            {{else}}
+                <span class="disabled">Next &raquo;</span>
+            {{end}}
+        </div>
+        
+        <div class="page-info">
+            Page {{.Paginator.CurrentPage}} of {{.Paginator.TotalPages}}
+        </div>
+    </div>
+    
+    <script>
+        function changePerPage(value) {
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('per_page', value);
+            urlParams.set('page', '1'); // Reset to first page when changing items per page
+            window.location.href = '?' + urlParams.toString();
+        }
+    </script>
+</body>
+</html> 
